@@ -16,8 +16,17 @@ class GameModel:
         self.game_over = False
         self.start_time = None
         self.time_left = game_duration
-        self.last_mosquito_added = time.time()
         self.score = 0  # 添加分数追踪
+        self.last_mosquito_added = time.time()
+        
+    def reset_game(self):
+        self.mosquitoes = []
+        self.game_started = False
+        self.game_over = False
+        self.start_time = None
+        self.time_left = self.game_duration
+        self.score = 0
+        self.last_mosquito_added = time.time()
 
     def add_mosquito(self):
         if len(self.mosquitoes) < self.max_mosquitoes:
@@ -33,7 +42,7 @@ class GameModel:
             else:
                 self.time_left = self.game_duration - (time.time() - self.start_time)
                 if self.time_left <= 0:
-                    self.game_over = True
+                    self.end_game()
 
             # 每隔一段時間添加一隻新蚊子
             if time.time() - self.last_mosquito_added > 1:
@@ -64,3 +73,6 @@ class GameModel:
         bx1, by1, bw, bh = rect_b
         bx2, by2 = bx1 + bw, by1 + bh
         return ax1 < bx2 and ax2 > bx1 and ay1 < by2 and ay2 > by1
+    
+    def end_game(self):
+        self.game_over = True

@@ -64,8 +64,16 @@ class GameView:
     def show_game_over_screen(self):
         self.screen.fill((0, 0, 0))
         font = pygame.font.SysFont(None, 55)
-        text = font.render('Game Over!', True, (255, 255, 255))
-        text_rect = text.get_rect(center=(self.model.screen_width // 2, self.model.screen_height // 2))
-        self.screen.blit(text, text_rect)
+
+        # 游戏结束文本
+        game_over_text = font.render('Game Over!', True, (255, 255, 255))
+        game_over_rect = game_over_text.get_rect(center=(self.model.screen_width // 2, self.model.screen_height // 2 - 30))
+        self.screen.blit(game_over_text, game_over_rect)
+
+        # 分数文本
+        score_text = font.render(f"Score: {self.model.score}", True, (255, 255, 255))
+        score_rect = score_text.get_rect(center=(self.model.screen_width // 2, self.model.screen_height // 2 + 30))
+        self.screen.blit(score_text, score_rect)
+
         pygame.display.flip()
-        time.sleep(3)
+        time.sleep(3)  # 显示3秒结束画面后退出
