@@ -24,10 +24,14 @@ class GameView:
         self.start_button_rect = self.start_button_normal_img.get_rect()
         self.start_button_rect.center = (model.screen_width // 2, model.screen_height // 2)
 
-    def update(self, game_started, mosquitoes, game_over):
+        # 设置字体用于显示时间
+        self.font = pygame.font.SysFont(None, 36)
+
+    def update(self, game_started, mosquitoes, game_over, time_left):
         self.game_started = game_started
         self.mosquitoes = mosquitoes
         self.game_over = game_over
+        self.time_left = time_left
         self.draw()
 
     def draw(self):
@@ -45,6 +49,11 @@ class GameView:
         hand_pos = (hand_pos[0] - 100, hand_pos[1] - 100)
         pygame.mouse.set_visible(False)
         self.screen.blit(self.hand_img, hand_pos)
+
+        if self.game_started and not self.game_over:
+            # 显示时间
+            time_text = self.font.render(f"Time: {int(self.time_left)}", True, (255, 255, 255))
+            self.screen.blit(time_text, (10, 10))  # 将时间文本渲染在屏幕的左上角
 
         pygame.display.flip()
 
