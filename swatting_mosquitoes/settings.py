@@ -2,5 +2,5 @@
 # 遊戲基本設定
 GAME_CAPTION = '打蚊子遊戲'
 SCREEN_WIDTH, SCREEN_HEIGHT = 700, 700
-GAME_DURATION = 120  # 遊戲持續時間（秒）
+GAME_DURATION = 60  # 遊戲持續時間（秒）
 MAX_MOSQUITOES = 10  # 最大蚊子數量

@@ -17,6 +17,7 @@ class GameModel:
         self.start_time = None
         self.time_left = game_duration
         self.last_mosquito_added = time.time()
+        self.score = 0  # 添加分数追踪
 
     def add_mosquito(self):
         if len(self.mosquitoes) < self.max_mosquitoes:
@@ -48,9 +49,10 @@ class GameModel:
 
     def check_mosquito_hit(self, hand_pos):
         hand_rect = (hand_pos[0]-80, hand_pos[1]-80, 80, 80)
-        print(hand_rect, self.mosquitoes)
+        for m in self.mosquitoes:
+            if self._colliderect(m, hand_rect):
+                self.score += 10  # 每打中一隻蚊子加 10 分
         self.mosquitoes[:] = [m for m in self.mosquitoes if not self._colliderect(m, hand_rect)]
-        print(len(self.mosquitoes))
 
     def _colliderect(self, mosquito, hand_rect):
         mosquito_rect = (mosquito[0], mosquito[1], 100, 100)

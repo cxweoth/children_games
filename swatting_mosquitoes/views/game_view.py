@@ -27,11 +27,12 @@ class GameView:
         # 设置字体用于显示时间
         self.font = pygame.font.SysFont(None, 36)
 
-    def update(self, game_started, mosquitoes, game_over, time_left):
+    def update(self, game_started, mosquitoes, game_over, time_left, score):
         self.game_started = game_started
         self.mosquitoes = mosquitoes
         self.game_over = game_over
         self.time_left = time_left
+        self.score = score
         self.draw()
 
     def draw(self):
@@ -54,6 +55,9 @@ class GameView:
             # 显示时间
             time_text = self.font.render(f"Time: {int(self.time_left)}", True, (255, 255, 255))
             self.screen.blit(time_text, (10, 10))  # 将时间文本渲染在屏幕的左上角
+            # 显示分数
+            score_text = self.font.render(f"Score: {self.score}", True, (255, 255, 255))
+            self.screen.blit(score_text, (10, 40))  # 将分数文本渲染在屏幕左上角，下方时间
 
         pygame.display.flip()
 

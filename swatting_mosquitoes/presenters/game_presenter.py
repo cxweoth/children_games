@@ -17,7 +17,9 @@ class GamePresenter:
                     self.handle_mouse_button_down(event)
 
             self.model.update()
-            self.view.update(self.model.game_started, self.model.mosquitoes, self.model.game_over, self.model.time_left)
+            self.view.update(self.model.game_started, self.model.mosquitoes, 
+                             self.model.game_over, self.model.time_left, 
+                             self.model.score)
 
             if self.model.game_over:
                 self.view.show_game_over_screen()
