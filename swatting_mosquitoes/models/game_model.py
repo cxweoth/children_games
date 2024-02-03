@@ -18,6 +18,7 @@ class GameModel:
         self.time_left = game_duration
         self.score = 0  # 添加分数追踪
         self.last_mosquito_added = time.time()
+        self.high_scores = []  # 用于存储分数
         
     def reset_game(self):
         self.mosquitoes = []
@@ -76,3 +77,9 @@ class GameModel:
     
     def end_game(self):
         self.game_over = True
+
+    def save_score(self, name):
+        self.high_scores.append((name, self.score))
+        self.high_scores.sort(key=lambda x: x[1], reverse=True)  # 根据分数排序
+        # only keep top 10 scores
+        self.high_scores = self.high_scores[:10]

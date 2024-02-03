@@ -23,8 +23,10 @@ class GamePresenter:
 
             if self.model.game_over:
                 self.view.show_game_over_screen()
-                self.model.reset_game()  # 重置游戏状态
-                pygame.time.wait(1500)  # 等待一段时间后继续游戏循环
+                player_name = self.view.get_player_name()
+                self.model.save_score(player_name)
+                self.view.show_high_scores()
+                self.model.reset_game()
 
         pygame.quit()
 

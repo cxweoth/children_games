@@ -2,6 +2,7 @@
 import os
 import time
 import pygame
+from .components.virtual_keyboard import VirtualKeyboard
 
 class GameView:
     def __init__(self, screen, model, img_path):
@@ -26,6 +27,8 @@ class GameView:
 
         # 设置字体用于显示时间
         self.font = pygame.font.SysFont(None, 36)
+
+        self.virtual_keyboard = VirtualKeyboard(screen, self.font, 100, model.screen_height // 3 + 50)
 
     def update(self, game_started, mosquitoes, game_over, time_left, score):
         self.game_started = game_started
@@ -77,3 +80,70 @@ class GameView:
 
         pygame.display.flip()
         time.sleep(3)  # 显示3秒结束画面后退出
+
+    def get_player_name(self):
+        # 创建一个输入框供玩家输入名字
+        input_box = pygame.Rect(self.model.screen_width // 2 - 100, self.model.screen_height // 3, 200, 32)
+        color_inactive = pygame.Color('lightskyblue3')
+        color_active = pygame.Color('dodgerblue2')
+        color = color_inactive
+        active = False
+        text = ''
+        font = pygame.font.Font(None, 32)
+        done = False
+
+        pygame.mouse.set_visible(True)
+        while not done:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    done = True
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if input_box.collidepoint(event.pos):
+                        active = True
+                    else:
+                        key = self.virtual_keyboard.get_key(event.pos)
+                        if key:
+                            if key == 'BACK':
+                                text = text[:-1]
+                            elif key == 'ENTER':
+                                done = True  # 当用户点击 Enter 键时完成输入
+                            else:
+                                text += key
+                        active = False
+                    color = color_active if active else color_inactive
+                if event.type == pygame.KEYDOWN:
+                    if active:
+                        if event.key == pygame.K_RETURN:
+                            done = True
+                        elif event.key == pygame.K_BACKSPACE:
+                            text = text[:-1]
+                        else:
+                            text += event.unicode
+
+            self.screen.fill((30, 30, 30))
+            txt_surface = font.render(text, True, color)
+            width = max(200, txt_surface.get_width()+10)
+            input_box.w = width
+            self.screen.blit(txt_surface, (input_box.x+5, input_box.y+5))
+            pygame.draw.rect(self.screen, color, input_box, 2)
+            self.virtual_keyboard.draw()  # 绘制虚拟键盘
+
+            pygame.display.flip()
+        return text
+    
+    def show_high_scores(self):
+        self.screen.fill((0, 0, 0))
+        font = pygame.font.SysFont(None, 36)
+
+        title = font.render("High Scores", True, (255, 255, 255))
+        title_rect = title.get_rect(center=(self.model.screen_width // 2, self.model.screen_height // 3 - 40))
+        self.screen.blit(title, title_rect)
+
+        start_y = self.model.screen_height // 3 # 排行榜开始的 Y 坐标
+        for i, score in enumerate(self.model.high_scores[:10]):  # 显示前10名
+            text = font.render(f"{i+1}. {score[0]}: {score[1]}", True, (255, 255, 255))
+            text_rect = text.get_rect(center=(self.model.screen_width // 2, start_y + i * 30))
+            self.screen.blit(text, text_rect)
+
+        pygame.display.flip()
+        pygame.time.wait(5000)  # 显示5秒
